@@ -1,105 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pro Music</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Dark Music Player</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --accent-pink: #ff4d8d;
+            --accent-blue: #00d2ff;
+            --text-gray: #a0a0a0;
+        }
 
-<link rel="manifest" href="manifest.json">
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            justify-content: center;
+            align-items: center;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: -apple-system, Arial;
-  background: #0a0a0a;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+        .player-container {
+            background: linear-gradient(145deg, #1f1f1f, #181818);
+            width: 320px;
+            padding: 40px 20px;
+            border-radius: 50px;
+            box-shadow: 20px 20px 60px #0b0b0b, -5px -5px 20px #252525;
+            text-align: center;
+            position: relative;
+        }
 
-header {
-  padding: 20px;
-  font-size: 22px;
-  font-weight: bold;
-}
+        /* Circular Progress Area */
+        .circle-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+        }
 
-.container {
-  width: 92%;
-  max-width: 450px;
-  background: #161616;
-  border-radius: 16px;
-  padding: 16px;
-}
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
 
-.controls button {
-  margin: 4px;
-  padding: 10px;
-  border: 0;
-  border-radius: 10px;
-  background: #2a2a2a;
-  color: white;
-}
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+            stroke: var(--accent-pink);
+        }
 
-.primary { background: #1db954 !important; }
+        .album-art {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: #282828;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            object-fit: cover;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
 
-ul {
-  list-style: none;
-  padding: 0;
-  max-height: 250px;
-  overflow-y: auto;
-}
+        .info h2 { font-size: 1.2rem; margin: 10px 0 5px; letter-spacing: 1px; }
+        .info p { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 30px; }
 
-li {
-  padding: 10px;
-  margin: 6px 0;
-  background: #222;
-  border-radius: 10px;
-  cursor: pointer;
-}
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 20px;
+        }
 
-li.active { background: #1db954; }
+        .btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+        }
 
-input {
-  margin: 10px 0;
-}
-</style>
+        .btn-play {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--accent-pink);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(255, 77, 141, 0.4);
+        }
+
+        /* Hidden File Input */
+        .file-label {
+            display: inline-block;
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            cursor: pointer;
+            border: 1px solid var(--accent-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+    </style>
 </head>
-
 <body>
 
-<header>🎧 Pro Music</header>
+<div class="player-container">
+    <div class="circle-container">
+        <svg class="progress-ring" width="200" height="200">
+            <circle stroke="#333" stroke-width="6" fill="transparent" r="90" cx="100" cy="100"/>
+            <circle id="progress-bar" class="progress-ring__circle" stroke-width="6" stroke-dasharray="565.48" stroke-dashoffset="565.48" fill="transparent" r="90" cx="100" cy="100"/>
+        </svg>
+        <div class="album-art" id="art">🎵</div>
+    </div>
 
-<div class="container">
+    <div class="info">
+        <h2 id="title">Select Music</h2>
+        <p id="artist">Local Files</p>
+    </div>
 
-<input type="file" id="fileInput" multiple accept="audio/*">
+    <div class="controls">
+        <button class="btn">⏮</button>
+        <button class="btn btn-play" id="play-btn">▶</button>
+        <button class="btn">⏭</button>
+    </div>
 
-<audio id="audio" controls style="width:100%; margin-top:10px;"></audio>
-
-<div class="controls">
-  <button onclick="prev()">⏮</button>
-  <button class="primary" onclick="play()">▶</button>
-  <button onclick="pause()">⏸</button>
-  <button onclick="next()">⏭</button>
+    <label class="file-label">
+        PICK FROM FILES
+        <input type="file" id="file-input" hidden accept="audio/*">
+    </label>
 </div>
 
-<div class="controls">
-  <button onclick="toggleShuffle()">🔀</button>
-  <button onclick="toggleRepeat()">🔁</button>
-  <button onclick="clearAll()">🗑</button>
-</div>
+<audio id="audio"></audio>
 
-<ul id="list"></ul>
+<script>
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('play-btn');
+    const fileInput = document.getElementById('file-input');
+    const progressBar = document.getElementById('progress-bar');
+    const title = document.getElementById('title');
+    
+    const circumference = 90 * 2 * Math.PI;
 
-</div>
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if(file) {
+            audio.src = URL.createObjectURL(file);
+            title.innerText = file.name.split('.')[0];
+            togglePlay();
+        }
+    }
 
-<script src="app.js"></script>
+    function togglePlay() {
+        if (audio.paused) {
+            audio.play();
+            playBtn.innerText = '⏸';
+        } else {
+            audio.pause();
+            playBtn.innerText = '▶';
+        }
+    }
+
+    playBtn.onclick = togglePlay;
+
+    audio.ontimeupdate = () => {
+        const percent = audio.currentTime / audio.duration;
+        const offset = circumference - (percent * circumference);
+        progressBar.style.strokeDashoffset = offset;
+    }
+</script>
+
 </body>
 </html>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1db954">
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-</script>
