@@ -96,3 +96,10 @@ input {
 <script src="app.js"></script>
 </body>
 </html>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1db954">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
