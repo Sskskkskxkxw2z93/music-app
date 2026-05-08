@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pro Music</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, Arial;
+  background: #0a0a0a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  padding: 20px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.container {
+  width: 92%;
+  max-width: 450px;
+  background: #161616;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.controls button {
+  margin: 4px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: #2a2a2a;
+  color: white;
+}
+
+.primary { background: #1db954 !important; }
+
+ul {
+  list-style: none;
+  padding: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+li {
+  padding: 10px;
+  margin: 6px 0;
+  background: #222;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+li.active { background: #1db954; }
+
+input {
+  margin: 10px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>🎧 Pro Music</header>
+
+<div class="container">
+
+<input type="file" id="fileInput" multiple accept="audio/*">
+
+<audio id="audio" controls style="width:100%; margin-top:10px;"></audio>
+
+<div class="controls">
+  <button onclick="prev()">⏮</button>
+  <button class="primary" onclick="play()">▶</button>
+  <button onclick="pause()">⏸</button>
+  <button onclick="next()">⏭</button>
+</div>
+
+<div class="controls">
+  <button onclick="toggleShuffle()">🔀</button>
+  <button onclick="toggleRepeat()">🔁</button>
+  <button onclick="clearAll()">🗑</button>
+</div>
+
+<ul id="list"></ul>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
